@@ -1,0 +1,34 @@
+
+
+
+.container{
+    display: flex;
+    height: 70vh;
+    width: 550vh;
+    margin-left: 10%;
+    background-image: url(../assets/buy_1.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: 5s;
+   
+
+    animation-name: animate;
+    animation-direction: alternate-reverse;
+    animation-duration: 30s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+    animation-timing-function: ease-in-out;
+}   
+
+
+@keyframes animate{
+    0%{
+        background-image: url(../assets/buy_2.jpg);
+    }20%{
+        background-image: url(../assets/buy_3.jpg);
+    }
+
+}
+

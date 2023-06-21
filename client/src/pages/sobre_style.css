@@ -1,0 +1,50 @@
+#product_font_about{
+    font-size: 45px ;
+    margin-left: 45%;
+    text-decoration: underline;
+}
+
+
+#card_sobre{
+    width: 50%;
+    margin-left: 25%;
+    border-radius:15px;
+    font-size: 25px;
+    margin-bottom: 10%;
+}
+
+.card_text{
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+.card_title{
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+}
+
+
+#card_sobre:hover{
+    transform: scale(1.01);
+    transition: all 1s ease-in-out;
+    cursor: pointer;
+    background-color: rgb(21, 182, 125);
+    color: rgb(255, 255, 255);
+    border-radius: 50px;
+}
+
+
+
+#img{
+   height: 65vh;
+   border-radius:15px;
+   background-image: url(../assets/about.jpg);
+   background-size: cover;
+}
+
+#img:hover{
+    transition: all 1s ease-in-out;
+    border-radius: 50px;
+}

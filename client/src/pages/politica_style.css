@@ -1,0 +1,19 @@
+#text{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 30%;
+    margin-bottom: 10%;
+}
+
+
+#product_font{
+    font-size: 45px ;
+    margin-left: 2%;
+    text-decoration: underline;
+    margin-bottom: 2%;
+}
+
+#large_text{
+    margin-right: 30%;
+}

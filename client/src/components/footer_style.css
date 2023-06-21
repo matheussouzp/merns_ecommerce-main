@@ -1,0 +1,39 @@
+.fixed_footer{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    z-index: 1;
+    height: 10%;
+    width: 100%;
+    background: #262626;
+    color: #666;
+    font-size: 35px;
+    text-transform: uppercase;
+}
+
+
+
+#footer_text:hover{
+        cursor: pointer;
+        scale: 1.02;
+        transition: all 1s ease;
+        color: aliceblue;
+}
+
+
+
+
+.margin400px{
+    margin-bottom: 200px;
+}
+
+
+
+#icons:hover{
+    cursor: pointer;
+    transform: scale(1.03);
+    transition: all 1s ease;
+    color: white;
+}
