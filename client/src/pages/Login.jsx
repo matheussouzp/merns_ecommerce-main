@@ -24,9 +24,7 @@ const Login = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-
     console.log(inputs);
-
     axios
       .post(
         "http://localhost:5000/cliente/login",
@@ -35,7 +33,6 @@ const Login = () => {
       )
       .then((res) => {
         console.log(res);
-
         if (!res.data.created) {
           if (res.data.error_type === 0) {
             toast.error(res.data.error[0].msg, {
@@ -123,10 +120,10 @@ const Login = () => {
 
         <div className="flex justify-between items-center my-3 mb-5">
           <button className="text-white font-bold bg-blue-500 py-2 px-3 border rounder hover:bg-blue-700">
-            Login
+            Entrar
           </button>
-          <a href="#" className=" text-blue-500">
-            forgot password?
+          <a href="/registrar" className=" text-blue-500">
+            Cadastrar
           </a>
         </div>
       </form>

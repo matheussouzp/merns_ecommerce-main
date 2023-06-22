@@ -12,14 +12,17 @@ import { GlobalContext } from "../GlobalContext/GlobalContext";
 
 const Registrar = () => {
   const history = useNavigate();
+  const [categorias, setCategorias] = useState([]);
 
   const { LoginStatus, IsLoggedIn, cart, AdminStatus } = useContext(GlobalContext);
-
 
   if(!AdminStatus){
     history('/');
   }
-  
+
+console.log("admin"  + AdminStatus);
+
+
   const [inputs, setInputs] = useState({
     nome: "",
     endereco: "",
@@ -47,7 +50,7 @@ const Registrar = () => {
     console.log(inputs);
     axios
       .post(
-        "http://localhost:5000/cliente/",
+        "http://localhost:5000/categoria/",
         { ...inputs },
         { withCredentials: true }
       )
@@ -95,19 +98,79 @@ const Registrar = () => {
       .catch((err) => {
         console.log(`Request error: ${err}`);
       });
-
-      
     // usando axios para conectar como o backend
   };
 
+  const getCategorias = (e) => {
+    e.preventDefault();
+
+    console.log("teste")
+    
+    axios
+      .get(
+        "http://localhost:5000/categoria/",
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log(res);
+        if (!res.data.created) {
+          if (res.data.error_type === 0) {
+            toast.error(res.data.error[0].msg, {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          } else if (res.data.error_type === 1) {
+            toast.error(res.data.message, {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
+        }
+        if (res.data.created) {
+          toast.success(res.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        console.log(`Request error: ${err}`);
+      });
+    // usando axios para conectar como o backend
+  };
+
+
+
   return (
-    <div className="w-full flex justify-center items-center" id="forms">
+    <>
+    {AdminStatus && (
+      <div className="w-full flex justify-center items-center" id="forms">
+
       <form
         className="bg-white p-4 shadow-md border rounded my-5 py-3"
-        onSubmit={submitHandler}
+        onSubmit={() => submitHandler}
       >
         <h2 className="text-center w-full p-3 text-gray-500 text-xl font-bold">
-          Registrar conta
+          Cadastrar Produto
         </h2>
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="nome">
@@ -118,124 +181,78 @@ const Registrar = () => {
             placeholder="Nome"
             id="nome"
             name="nome"
-            onChange={onChangeHandler}
+            onChange={() => onChangeHandler}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
           />
         </div>
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="endereco">
-            Endereço
+            Descrição
           </label>
           <input
             type="text"
             placeholder="Endereço"
             id="endereco"
             name="endereco"
-            onChange={onChangeHandler}
+            onChange={() => onChangeHandler}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
           />
         </div>
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="telefone">
-            Telefone
+            Preço
           </label>
           <input
             type="number"
             placeholder="Telefone"
             id="telefone"
             name="telefone"
-            onChange={onChangeHandler}
+            onChange={() => onChangeHandler}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
           />
+        </div>
+        <div className="mb-2">
+        <label className="text-gray-500 mb-2 font-bold" htmlFor="telefone">
+            Categoria
+        </label>
+        <select
+        className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
+        onChange={onChangeHandler}
+      >
+        <option value="" selected disabled>
+          Selecione uma categoria
+        </option>
+        {categorias.map((categoria) => (
+          <option key={categoria.id} value={categoria.id}>
+            {categoria.nome}
+          </option>
+        ))}
+      </select>
         </div>
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="cpf">
-            CPF
+            Animal
           </label>
           <input
-            type="number"
+            type="text"
             placeholder="CPF"
             id="cpf"
             name="cpf"
-            onChange={onChangeHandler}
+            onChange={() =>onChangeHandler}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
           />
         </div>
-        <div className="mb-2">
-          <label className="text-gray-500 mb-2 font-bold" htmlFor="cartaoNome">
-            Nome do Cartão
-          </label>
-          <input
-            type="text"
-            placeholder="Nome do Cartão"
-            id="cartaoNome"
-            name="cartaoNome"
-            onChange={onChangeHandler}
-            className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-          />
-        </div>
-        <div className="mb-2">
-          <label className="text-gray-500 mb-2 font-bold" htmlFor="cartaoNumero">
-            Número do Cartão
-          </label>
-          <input
-            type="number"
-            placeholder="Número do Cartão"
-            id="cartaoNumero"
-            name="cartaoNumero"
-            onChange={onChangeHandler}
-            className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-          />
-        </div>
-        <div className="mb-2">
-          <label className="text-gray-500 mb-2 font-bold" htmlFor="cvc">
-            CVC
-          </label>
-          <input
-            type="number"
-            placeholder="CVC"
-            id="cvc"
-            name="cvc"
-            onChange={onChangeHandler}
-            className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-          />
-        </div>
-        <div className="mb-2">
-          <label className="text-gray-500 mb-2 font-bold" htmlFor="email">
-            Email
-          </label>
-          <input
-            type="text"
-            placeholder="Email"
-            id="email"
-            name="email"
-            onChange={onChangeHandler}
-            className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-          />
-        </div>
-        <div className="mb-2">
-          <label className="text-gray-500 mb-2 font-bold" htmlFor="senha">
-            Senha
-          </label>
-          <input
-            type="password"
-            placeholder="Senha"
-            id="senha"
-            name="senha"
-            onChange={onChangeHandler}
-            className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-          />
-        </div>
+        
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="imagem">
-            Foto de perfil
+            Foto do Produto
           </label>
           <input
             type="file"
             id="imagem"
             name="imagem"
             accept="image/*"
-            onChange={onChangeHandler}
+            onChange={() => onChangeHandler()}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
           />
         </div>
@@ -243,13 +260,23 @@ const Registrar = () => {
           <button className="text-white font-bold bg-blue-500 py-2 px-3 border rounder hover:bg-blue-700" > 
             Registrar
           </button>
+          <button className="text-white font-bold bg-blue-500 py-2 px-3 border rounder hover:bg-blue-700" onClick={(e) => getCategorias(e)} > 
+            buttonteste
+          </button>
+
           
           {/* <Link to="/login" className="text-blue-500"><p>Already have an account</p></Link> */}
         </div>
       </form>
       <ToastContainer />
     </div>
+    ) }
+
+    
+    
+    </>
   );
+    
 };
 
 export default Registrar;

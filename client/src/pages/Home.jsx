@@ -5,10 +5,14 @@ import { Link } from "react-router-dom";
 import { GlobalContext } from "../GlobalContext/GlobalContext";
 import { useContext } from "react";
 import '../pages/home_style.css'
+import { useNavigate } from "react-router-dom";
+import Cookie from 'js-cookie';
 
 
 
 const Home = () => {
+  const navigate = useNavigate();
+
   const [products, setProducts] = useState([]);
   const { cart, addToCart, updateCart } = useContext(GlobalContext);
   useEffect(() => {
@@ -28,31 +32,39 @@ const Home = () => {
 
   const addToCartHandler = (event) => {
     event.preventDefault();
+    
     let id = event.target.id;
-
-    const name = document.getElementById("hiddenname" + id).value;
-    const price = document.getElementById("hiddenprice" + id).value;
-    const image = document.getElementById("hiddenimage" + id).value;
-
-    const newItem = {
-      id,
-      name,
-      price: +price,
-      image,
-      quantity: 1,
-    };
-
-    const findItem = cart.find((item) => item.id === id);
-
-    if (findItem) {
-      // console.log("exist");
-      updateCart(id);
-      // console.log(cart);
-      return;
+    const token = Cookie.get("jwt_token");
+    
+    if (token) { //logica pra add item ao carrinho
+      const name = document.getElementById("hiddenname" + id).value;
+      const price = document.getElementById("hiddenprice" + id).value;
+      const image = document.getElementById("hiddenimage" + id).value;
+  
+      const newItem = {
+        id,
+        name,
+        price: +price,
+        image,
+        quantity: 1,
+      };
+  
+      const findItem = cart.find((item) => item.id === id);
+  
+      if (findItem) {
+        // console.log("exist");
+        updateCart(id);
+        // console.log(cart);
+        return;
+      }
+  
+      addToCart(newItem);
+      //  console.log(cart);
+    }else {
+      // Caso não haja um token ou um usuário existente, redireciona para a página de login
+      navigate("/login");
     }
-
-    addToCart(newItem);
-    //  console.log(cart);
+    
   };
 
   return (
@@ -64,8 +76,9 @@ const Home = () => {
       <div className="w-full flex justify-center mt-5 mb-4" id="cards">
         <div className="grid gap-4 grid-cols-3 w-[80%]">
           {products.map((product) => {
-            return (
-              <div className="shadow" key={product._id} id="card">
+            return ( <Link to={`produto/detalhes/${product.codigo}`}>
+
+                      <div className="shadow" key={product._id} id="card">
                 <img src={product.url_img} className="h-[250px] w-full " />
 
                 <div className="w-[95%] flex justify-between my-3 ">
@@ -97,14 +110,12 @@ const Home = () => {
                     >
                       Comprar
                     </button>
-                    <Link to={`produto/detalhes/${product.codigo}`}>
-                      <button className="py-2 px-5 my-2">
-                        Detalhes
-                      </button>
-                    </Link>
+                    
                   </div>
                 </div>
               </div>
+                    </Link>
+              
             );
           })}
         </div>

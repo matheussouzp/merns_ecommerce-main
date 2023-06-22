@@ -2,7 +2,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Galery from "./components/Galery";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -18,6 +18,7 @@ import axios from "axios";
 import AddNewProduct from "./pages/AddNewProduct";
 import ProductDetails from "./pages/ProductDetails";
 import Registrar from "./pages/Registrar";
+import CadastrarProduto from "./pages/CadastrarProduto";
 import Login2 from "./pages/Login2";
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
 
   const navigate = useNavigate();
 
-  const { IsLoggedIn, LoginStatus } = useContext(GlobalContext);
+  const { IsLoggedIn } = useContext(GlobalContext);
 
   //console.log(LoginStatus);
 
@@ -34,7 +35,6 @@ function App() {
     axios
       .post(
         //"http://localhost:5000/cliente/validar",
-        "http://localhost:5000/cliente/validar",
         { token },
         { withCredentials: true }
       )
@@ -45,10 +45,7 @@ function App() {
           navigate("/login");
           IsLoggedIn(false);
         } else {
-          //console.log(res.data);
           IsLoggedIn(true);
-          //navigate("/");
-          // console.log("console");
         }
       })
       .catch((err) => {
@@ -74,6 +71,8 @@ function App() {
         <Route path="politica" element={<Politica />} />
         <Route path="registrar" element={<Registrar />} />
         <Route path="login2" element={<Login2 />} />
+        <Route path="novoproduto" element={<CadastrarProduto />} />
+
       </Routes>
       <Footer />
     </div>

@@ -1,18 +1,53 @@
-import React, { useContext } from "react";
-import { useState } from "react";
+import React, { useContext, useState } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { GlobalContext } from "../GlobalContext/GlobalContext";
 import Cookie from "js-cookie";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaw } from "@fortawesome/free-solid-svg-icons";
-
-
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const [isClienteValido, setIsClienteValido] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [nav, setNav] = useState(false);
+  const [refreshNavbar, setRefreshNavbar] = useState(false);
 
-  const { LoginStatus, IsLoggedIn, cart } = useContext(GlobalContext);
+  const token = Cookie.get("jwt_token");
+  
+  useEffect(() => {
+    axios
+      .post(
+        "http://localhost:5000/cliente/validar",
+        { token },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log(res);
+
+        if (!res.data.status) {
+          Cookie.remove("jwt_token");
+          setIsClienteValido(false);
+          setIsAdmin(false);
+          IsLoggedIn(false);
+        } else {
+          setIsClienteValido(true);
+          setIsAdmin(res.data.admin); 
+          IsLoggedIn(true);
+          IsAdmin(res.data.admin)
+        }
+      })
+      .catch((err) => {
+        console.log(`Request err: ${err}`);
+      });
+  }, [navigate]);
+
+  const { LoginStatus, IsLoggedIn, cart, IsAdmin } = useContext(GlobalContext);
+
 
   const navHandler = () => {
     setNav(!nav);
@@ -20,8 +55,14 @@ const Navbar = () => {
 
   const logoutHandler = () => {
     Cookie.remove("jwt_token");
+    setIsClienteValido(false);
+    setIsAdmin(false);
     IsLoggedIn(false);
+    IsAdmin(false);
+    setRefreshNavbar(prevValue => !prevValue); // Atualiza a chave para remontar o componente
   };
+
+  
 
   return (
     <div className="w-full h-25 bg-[#000300] flex justify-between items-center">
@@ -37,11 +78,13 @@ const Navbar = () => {
             Home
           </li>
         </Link>
+        {isClienteValido && (
         <Link to="cart">
           <li className="text-white font-bold p-2 hover:bg-[#2C2A2A] cursor-pointer">
-            Cart <span className="px-1 py-0.4 bg-orange-400 rounded-full ">{cart.length}</span>
+            Carrinho <span className="px-1 py-0.4 bg-orange-400 rounded-full ">{cart.length}</span>
           </li>
         </Link>
+        )}
 
         {LoginStatus ? (
           <>
@@ -50,17 +93,19 @@ const Navbar = () => {
                 Profile
               </li>
             </Link> */}
-            <Link to="addnewproduct">
-              <li className="text-white font-bold p-2 hover:bg-[#2C2A2A] cursor-pointer">
-                Add New Product
-              </li>
-            </Link>
+            {isAdmin && (
+              <Link to="novoproduto">
+                <li className="text-white font-bold p-2 hover:bg-[#2C2A2A] cursor-pointer">
+                  Cadastrar Produto
+                </li>
+              </Link>
+             )}
             <Link to="/">
               <li
                 onClick={logoutHandler}
                 className="text-white font-bold p-2 hover:bg-[#2C2A2A] cursor-pointer"
               >
-                Logout
+                Sair
               </li>
             </Link>
           </>
@@ -68,12 +113,12 @@ const Navbar = () => {
           <>
             <Link to="/login">
               <li className="text-white font-bold p-2 hover:bg-[#2C2A2A] cursor-pointer">
-                Login
+                Entrar
               </li>
             </Link>
             <Link to="registrar">
               <li className="text-white font-bold p-2 hover:bg-[#2C2A2A] cursor-pointer">
-                Register
+                Registrar
               </li>
             </Link>
           </>
@@ -124,11 +169,13 @@ const Navbar = () => {
                   Profile
                 </li>
               </Link> */}
+              {isClienteValido && isAdmin && (
               <Link to="addnewproduct">
                 <li className="text-white font-bold p-2 hover:bg-[#2C2A2A] cursor-pointer">
                   Add New Product
                 </li>
               </Link>
+             )}
               <Link to="/">
                 <li
                   onClick={logoutHandler}

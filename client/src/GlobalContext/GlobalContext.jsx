@@ -2,11 +2,17 @@ import React, { createContext, useReducer } from "react";
 
 const initialState = {
   IsLoggIn: false,
+  IsAdmin: false,
   cart: [],
 };
 
 const Reducer = (state, action) => {
   switch (action.type) {
+    case "ISADMIN_IN":
+      return {
+        ...state,
+        IsAdmin: action.payload,
+      };
     case "ISLOGGED_IN":
       return {
         ...state,
@@ -67,6 +73,13 @@ export const GlobalContextProvider = ({ children }) => {
     });
   };
 
+  const IsAdmin = (data) => {
+    dispatch({
+      type: "ISADMIN_IN",
+      payload: data,
+    });
+  };
+
   const addToCart = (data) => {
     dispatch({
       type: "ADD_TO_CART",
@@ -105,6 +118,8 @@ export const GlobalContextProvider = ({ children }) => {
     <GlobalContext.Provider
       value={{
         IsLoggedIn,
+        IsAdmin,
+        AdminStatus: state.IsAdmin,
         LoginStatus: state.IsLoggIn,
         cart: state.cart,
         addToCart,

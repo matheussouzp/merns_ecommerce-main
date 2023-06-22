@@ -12,7 +12,8 @@ class ClienteController {
     async salvar(req, res) {
         try {
           let cliente = req.body;
-        
+          
+
           const max = await clienteModel.findOne({}).sort({ codigo: -1 });
           cliente.codigo = max == null ? 1 : max.codigo + 1;
 
@@ -27,10 +28,24 @@ class ClienteController {
             
             cliente.imagem = req.file.path;
           }
+          console.log(cliente.email);
+          cliente.admin = false;
           
+          await clienteModel.create(cliente);
+          const clientenovo = await clienteModel.findOne({ email : cliente.email})
+          const id = clientenovo._id;
+
+          const token = jwt.sign({ id }, process.env.jwt_key, {
+              expiresIn: "50m",
+            });
+
+            res
+              .cookie("jwt_token", token)
+              .status(200)
+              .send({ message: "Loggin ", token, created: true });
+
           
-          const resultado = await clienteModel.create(cliente);
-          res.status(201).json(resultado);
+          return clientenovo;
         } catch (error) {
           res.status(500).json({ error: 'Erro ao criar o perfil' });
         }
@@ -90,15 +105,14 @@ class ClienteController {
           res.json({ message: "Email incorreto", error_type: 1 });
           return;
         }
-        console.log(senha);
-        console.log(cliente.senha);
+        
 
         
         
         if (senha == cliente.senha) {
           const id = cliente._id;
           const token = jwt.sign({ id }, process.env.jwt_key, {
-            expiresIn: "1m",
+            expiresIn: "50m",
           });
       
           res
@@ -109,7 +123,7 @@ class ClienteController {
           res.json({ message: "Invalid Account", created: false });
         }
         
-      
+        return cliente;
     }
     
     async validarToken(req, res,next) {
@@ -126,6 +140,8 @@ class ClienteController {
           return;
         }
         res.json({
+          codigo: cliente.codigo,
+          admin: cliente.admin,
           status: true,
           username: cliente.nome,
           email: cliente.email,
