@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import './login_formulary.css';
+import { GlobalContext } from "../GlobalContext/GlobalContext";
 
 
 
@@ -12,7 +13,13 @@ const Login = () => {
     email: "",
     senha: "",
   });
+  const history = useNavigate();
 
+  const { LoginStatus, IsLoggedIn, cart, AdminStatus } = useContext(GlobalContext);
+
+  if(!IsLoggedIn){
+    history('/');
+  }
   const navigate = useNavigate();
 
   const onChangeHandler = (e) => {

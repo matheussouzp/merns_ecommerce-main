@@ -16,7 +16,7 @@ const Registrar = () => {
   const { LoginStatus, IsLoggedIn, cart, AdminStatus } = useContext(GlobalContext);
 
 
-  if(!AdminStatus){
+  if(IsLoggedIn){
     history('/');
   }
   
