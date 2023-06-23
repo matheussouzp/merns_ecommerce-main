@@ -1,13 +1,26 @@
 import React, { createContext, useReducer } from "react";
 
 const initialState = {
-  IsLoggIn: false,
+  IsLoggedIn: false,
   IsAdmin: false,
   cart: [],
+  codigo: "",
+  email: "",
 };
 
 const Reducer = (state, action) => {
   switch (action.type) {
+    case "SET_CODIGO":
+      return {
+        ...state,
+        codigo: action.payload,
+      };
+    case "SET_EMAIL":
+        return {
+          ...state,
+          email: action.payload,
+        };
+      
     case "ISADMIN_IN":
       return {
         ...state,
@@ -50,11 +63,15 @@ const Reducer = (state, action) => {
             : item.quantity;
         }),
       };
-
     case "REMOVE_ITEM":
       return {
         ...state,
         cart: [...state.cart.filter((item) => item.id !== action.payload)],
+      };
+    case "CLEAR_CART":
+      return {
+        ...state,
+        cart: [],
       };
     default:
       return state;
@@ -65,6 +82,20 @@ export const GlobalContext = createContext(initialState);
 
 export const GlobalContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
+
+  const Codigo = (codigo) => {
+    dispatch({
+      type: "SET_CODIGO",
+      payload: codigo,
+    });
+  };
+  
+  const setEmail = (email) => {
+    dispatch({
+      type: "SET_EMAIL",
+      payload: email,
+    });
+  };
 
   const IsLoggedIn = (data) => {
     dispatch({
@@ -114,6 +145,13 @@ export const GlobalContextProvider = ({ children }) => {
       payload: id,
     });
   };
+
+  const clearCart = () => {
+    dispatch({
+      type: "CLEAR_CART",
+    });
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -127,6 +165,9 @@ export const GlobalContextProvider = ({ children }) => {
         increaseQuantity,
         decreaseQuantity,
         removeItem,
+        clearCart,
+        Codigo,
+        setEmail,
       }}
     >
       {children}

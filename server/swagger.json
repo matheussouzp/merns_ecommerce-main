@@ -1,0 +1,140 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Catálogo de Filmes",
+      "description": "API Loja de Animais",
+      "version": "1.0"
+    },
+    "host": "localhost:5000",
+    "basePath": "/",
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/cliente": {
+        "get": {
+          "description": "Retorna Clientes.",
+          "operationId": "GET - Clientes",
+          "parameters": [
+          ],
+          "responses": {}
+        },
+        "put": {
+          "description": "EDITA Clientes.",
+          "operationId": "PUT - Clientes",
+          "parameters": [
+          ],
+          "responses": {}
+        },
+        "post": {
+          "description": "CRIA Clientes.",
+          "operationId": "POST - Clientes",
+          "parameters": [
+          ],
+          "responses": {}
+        },
+        "delete": {
+          "description": "DELETA Clientes.",
+          "operationId": "DELETE - Clientes",
+          "parameters": [
+          ],
+          "responses": {}
+        }
+
+      },
+      "/categoria": {
+        "get": {
+          "description": "Retorna Categorias.",
+          "operationId": "GET - Categorias",
+          "parameters": [
+          ],
+          "responses": {}
+        },
+        "put": {
+          "description": "EDITA Categorias.",
+          "operationId": "PUT - Categorias",
+          "parameters": [
+          ],
+          "responses": {}
+        },
+        "post": {
+          "description": "CRIA Categorias.",
+          "operationId": "POST - Categorias",
+          "parameters": [
+          ],
+          "responses": {}
+        },
+        "delete": {
+          "description": "DELETA Categorias.",
+          "operationId": "DELETE - Categorias",
+          "parameters": [
+          ],
+          "responses": {}
+        }
+        },
+        "/pedido": {
+          "get": {
+            "description": "Retorna Pedidos.",
+            "operationId": "GET - Pedidos",
+            "parameters": [
+            ],
+            "responses": {}
+          },
+          "put": {
+            "description": "EDITA Pedidos.",
+            "operationId": "PUT - Pedidos",
+            "parameters": [
+            ],
+            "responses": {}
+          },
+          "post": {
+            "description": "CRIA Pedidos.",
+            "operationId": "POST - Pedidos",
+            "parameters": [
+            ],
+            "responses": {}
+          },
+          "delete": {
+            "description": "DELETA Pedidos.",
+            "operationId": "DELETE - Pedidos",
+            "parameters": [
+            ],
+            "responses": {}
+          }
+  
+        },
+        "/produto": {
+          "get": {
+            "description": "Retorna Produtos.",
+            "operationId": "GET - Produtos",
+            "parameters": [
+            ],
+            "responses": {}
+          },
+          "put": {
+            "description": "EDITA Produtos.",
+            "operationId": "PUT - Produtos",
+            "parameters": [
+            ],
+            "responses": {}
+          },
+          "post": {
+            "description": "CRIA Produtos.",
+            "operationId": "POST - Produtos",
+            "parameters": [
+            ],
+            "responses": {}
+          },
+          "delete": {
+            "description": "DELETA Produtos.",
+            "operationId": "DELETE - Produtos",
+            "parameters": [
+            ],
+            "responses": {}
+          }
+  
+        }
+
+      }
+      
+}

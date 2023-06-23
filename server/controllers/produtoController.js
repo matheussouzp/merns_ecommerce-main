@@ -51,28 +51,32 @@ class ProdutoController {
     const resultado = await produtoModel.findOne({ 'codigo': codigo });
     res.status(200).json(resultado);
 }
-  
-async atualizar(req, res) {
-  try {
-    if (req.file) {
-      console.log(req.file);
-      req.body.imagem = req.file.path;
-    }
 
-    const codigo = req.params.codigo;
-    const produto = await produtoModel.findOneAndUpdate({ codigo: codigo }, req.body);
-
-    if (produto) {
-      res.status(200).send();
-    } else {
-      res.status(404).json({ error: 'Produto não encontrado' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao atualizar o produto' });
+  async buscarPorEmail(req, res) {
+    const email = req.params.email;
+    const resultado = await produtoModel.findOne({ 'email': email });
+    res.status(200).json(resultado);
   }
-}
+  
+  async atualizar(req, res) {
+    try {
+      if (req.file) {
+        console.log(req.file);
+        req.body.imagem = req.file.path;
+      }
 
+      const codigo = req.params.codigo;
+      const produto = await produtoModel.findOneAndUpdate({ codigo: codigo }, req.body);
 
+      if (produto) {
+        res.status(200).send();
+      } else {
+        res.status(404).json({ error: 'Produto não encontrado' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao atualizar o produto' });
+    }
+  }
 
   async excluir(req, res) {
     const codigo = req.params.codigo;
@@ -82,65 +86,65 @@ async atualizar(req, res) {
 }
   
 
-async adicionarComentario(req, res) {
-  try {
+  async adicionarComentario(req, res) {
+    try {
 
-    const codigo = req.params.codigo;
+      const codigo = req.params.codigo;
 
-    const { texto, nota } = req.body;
-    console.log(texto);
-    console.log(nota);
-    // Cria um objeto com os dados do comentário
-    const novoComentario = {
-      texto,
-      nota
-    };
+      const { texto, nota } = req.body;
+      console.log(texto);
+      console.log(nota);
+      // Cria um objeto com os dados do comentário
+      const novoComentario = {
+        texto,
+        nota
+      };
 
-    // Busca o produto pelo código
-    const produto = await produtoModel.findOne({ codigo });
+      // Busca o produto pelo código
+      const produto = await produtoModel.findOne({ codigo });
 
-    if (!produto) {
-      return res.status(404).json({ error: 'Produto não encontrado' });
+      if (!produto) {
+        return res.status(404).json({ error: 'Produto não encontrado' });
+      }
+
+      // Adiciona o novo comentário ao array de comentários do produto
+      produto.comentarios.push(novoComentario);
+
+      // Recalcula a nota geral do produto
+      const somaNotas = produto.comentarios.reduce((acumulador, comentario) => acumulador + comentario.nota, 0);
+      produto.medianota = somaNotas / produto.comentarios.length;
+
+      // Salva as alterações no produto
+      await produto.save();
+
+      res.status(201).json(produto);
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao adicionar o comentário' });
     }
-
-    // Adiciona o novo comentário ao array de comentários do produto
-    produto.comentarios.push(novoComentario);
-
-    // Recalcula a nota geral do produto
-    const somaNotas = produto.comentarios.reduce((acumulador, comentario) => acumulador + comentario.nota, 0);
-    produto.notaGeral = somaNotas / produto.comentarios.length;
-
-    // Salva as alterações no produto
-    await produto.save();
-
-    res.status(201).json(produto);
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao adicionar o comentário' });
   }
-}
 
-async obterComentarios(req, res) {
-  try {
-    const codigo = req.params.codigo;
-    
-    // Busca o produto pelo código
-    const produto = await produtoModel.findOne({ codigo });
+  async obterComentarios(req, res) {
+    try {
+      const codigo = req.params.codigo;
+      
+      // Busca o produto pelo código
+      const produto = await produtoModel.findOne({ codigo });
 
-    if (!produto) {
-      return res.status(404).json({ error: 'Produto não encontrado' });
+      if (!produto) {
+        return res.status(404).json({ error: 'Produto não encontrado' });
+      }
+
+      // Extrai os textos e notas dos comentários do produto
+      const comentarios = produto.comentarios.map(comentario => ({
+        texto: comentario.texto,
+        nota: comentario.nota
+      }));
+
+      res.status(200).json(comentarios);
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao obter os comentários do produto' });
     }
-
-    // Extrai os textos e notas dos comentários do produto
-    const comentarios = produto.comentarios.map(comentario => ({
-      texto: comentario.texto,
-      nota: comentario.nota
-    }));
-
-    res.status(200).json(comentarios);
-  } catch (error) {
-    res.status(500).json({ error: 'Erro ao obter os comentários do produto' });
   }
-}
 
 async listarDetalhes(req, res) {
   try {

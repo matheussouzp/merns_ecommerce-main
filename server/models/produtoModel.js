@@ -16,7 +16,8 @@ const produtoSchema = new mongoose.Schema({
   comentarios: [{
     texto: String,
     nota: Number
-  }]
+  }],
+  medianota : String
 }); 
 
 

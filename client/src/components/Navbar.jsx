@@ -27,7 +27,7 @@ const Navbar = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        console.log(res);
+        //console.log(res);
 
         if (!res.data.status) {
           Cookie.remove("jwt_token");
@@ -46,7 +46,8 @@ const Navbar = () => {
       });
   }, [navigate]);
 
-  const { LoginStatus, IsLoggedIn, cart, IsAdmin } = useContext(GlobalContext);
+  const { LoginStatus, IsLoggedIn, cart, IsAdmin, clearCart } = useContext(GlobalContext);
+ 
 
 
   const navHandler = () => {
@@ -59,11 +60,13 @@ const Navbar = () => {
     setIsAdmin(false);
     IsLoggedIn(false);
     IsAdmin(false);
+    clearCart();
     setRefreshNavbar(prevValue => !prevValue); // Atualiza a chave para remontar o componente
   };
 
-  
+ 
 
+  
   return (
     <div className="w-full h-25 bg-[#000300] flex justify-between items-center">
       <Link to="/">
@@ -73,6 +76,13 @@ const Navbar = () => {
       </h1>
       </Link>
       <ul className="hidden md:flex p-3">
+      {isClienteValido && (
+      <Link to="/perfil">
+          <li className="text-white font-bold p-2 hover:bg-[#2C2A2A] cursor-pointer">
+            Perfil
+          </li>
+        </Link>
+         )}
         <Link to="/">
           <li className="text-white font-bold p-2 hover:bg-[#2C2A2A] cursor-pointer">
             Home

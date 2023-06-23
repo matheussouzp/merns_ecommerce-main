@@ -2,19 +2,21 @@ import React, { useEffect, useState } from "react";
 import img1 from "../assets/1.jpg";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { GlobalContext } from "../GlobalContext/GlobalContext";
-import { useContext } from "react";
 import '../pages/home_style.css'
 import { useNavigate } from "react-router-dom";
 import Cookie from 'js-cookie';
-
+import { useContext } from "react";
+import { GlobalContext } from "../GlobalContext/GlobalContext";
 
 
 const Home = () => {
   const navigate = useNavigate();
-
   const [products, setProducts] = useState([]);
-  const { cart, addToCart, updateCart } = useContext(GlobalContext);
+  const { email , codigo, cart, addToCart, updateCart } = useContext(GlobalContext);
+  console.log("GPT LINDO");
+  console.log(email);
+  console.log(codigo);
+
   useEffect(() => {
     axios({
       url: "http://localhost:5000/produto",
@@ -40,14 +42,19 @@ const Home = () => {
       const name = document.getElementById("hiddenname" + id).value;
       const price = document.getElementById("hiddenprice" + id).value;
       const image = document.getElementById("hiddenimage" + id).value;
-  
+      const codigo = document.getElementById("hiddencodigo" + id).value;
+
+
       const newItem = {
+
         id,
         name,
         price: +price,
         image,
         quantity: 1,
+        codigo,
       };
+      console.log(newItem);
   
       const findItem = cart.find((item) => item.id === id);
   
@@ -76,23 +83,33 @@ const Home = () => {
       <div className="w-full flex justify-center mt-5 mb-4" id="cards">
         <div className="grid gap-4 grid-cols-3 w-[80%]">
           {products.map((product) => {
-            return ( <Link to={`produto/detalhes/${product.codigo}`}>
+            return ( 
+            <Link to={`produto/detalhes/${product.codigo}`}>
 
-                      <div className="shadow" key={product._id} id="card">
-                <img src={product.url_img} className="h-[250px] w-full " />
+                <div className="shadow" key={product._id} id="card">
+                <img src={product.url_img} className="h-[250px] w-full object-contain"  />
 
                 <div className="w-[95%] flex justify-between my-3 ">
+                  
                   <div className="mx-2">
                     <h2>{product.nome}</h2>
                     <h3>Por : R${product.preco}</h3>
+
+
+
                     <input
                       type="hidden"
-                      value={product.name}
+                      value={product.codigo}
+                      id={`hiddencodigo${product._id}`}
+                    />
+                    <input
+                      type="hidden"
+                      value={product.nome}
                       id={`hiddenname${product._id}`}
                     />
                     <input
                       type="hidden"
-                      value={product.price}
+                      value={product.preco}
                       id={`hiddenprice${product._id}`}
                     />
                     <input
@@ -100,6 +117,12 @@ const Home = () => {
                       value={product.url_img}
                       id={`hiddenimage${product._id}`}
                     />
+
+
+
+
+
+
 
                   </div>
                   <div>

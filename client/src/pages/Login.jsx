@@ -12,12 +12,14 @@ const Login = () => {
   const [inputs, setInputs] = useState({
     email: "",
     senha: "",
+    codigo: "",
   });
   const history = useNavigate();
 
-  const { LoginStatus, IsLoggedIn, cart, AdminStatus } = useContext(GlobalContext);
+  const { codigo, Codigo, LoginStatus, setEmail , IsLoggedIn, cart, AdminStatus } = useContext(GlobalContext);
 
-  if(!IsLoggedIn){
+
+  if(LoginStatus){
     history('/');
   }
   const navigate = useNavigate();
@@ -31,7 +33,6 @@ const Login = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(inputs);
     axios
       .post(
         "http://localhost:5000/cliente/login",
@@ -65,20 +66,27 @@ const Login = () => {
             });
           }
         }
+  if (res.data.created) {
+    toast.success(res.data.message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    console.log("testeeeeeeeeeee");
+    Codigo(res.data.codigo);
+    
+    console.log(codigo);
+    console.log(inputs);
+    navigate("/");
+  } 
 
-        if (res.data.created) {
-          toast.success(res.data.message, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          navigate("/");
-        }
+// ...
+
       })
       .catch((err) => {
         console.log(`Request error: ${err}`);

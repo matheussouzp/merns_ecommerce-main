@@ -92,9 +92,7 @@ class ClienteController {
     async autenticar(req, res) {    
       
         const { email, senha } = req.body;
-    
         const error = validationResult(req);
-    
         if (!error.isEmpty()) {
           res.json({ error: error.array(), error_type: 0 });
           return;
@@ -104,21 +102,25 @@ class ClienteController {
         if (!cliente) {
           res.json({ message: "Email incorreto", error_type: 1 });
           return;
-        }
-        
-
-        
+        }       
         
         if (senha == cliente.senha) {
           const id = cliente._id;
           const token = jwt.sign({ id }, process.env.jwt_key, {
             expiresIn: "50m",
           });
-      
+          
+          const resposta = {
+            message: "Login",
+            token,
+            created: true,
+            codigo: cliente.codigo,
+          };
+          
           res
             .cookie("jwt_token", token)
             .status(200)
-            .send({ message: "Loggin ", token, created: true });
+            .send(resposta);
         } else {
           res.json({ message: "Invalid Account", created: false });
         }

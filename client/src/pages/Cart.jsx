@@ -1,12 +1,121 @@
-import React from "react";
-import { useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { GlobalContext } from "../GlobalContext/GlobalContext";
 import './cart_style.css';
+import { Navigate, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { toast } from "react-toastify";
+
 
 const Cart = () => {
   const { cart, increaseQuantity, decreaseQuantity, removeItem } =
     useContext(GlobalContext);
-  console.log(cart);
+    const history = useNavigate();
+
+    
+    
+  console.log("aquiiii " +cart);
+  const { LoginStatus, IsLoggedIn, AdminStatus } = useContext(GlobalContext);
+
+  if(!LoginStatus){
+    history('/');
+  }
+
+  const [inputs, setInputs] = useState({
+    precototal: "",
+    produto: "",
+    cliente: "1",
+  });
+
+  const totalPrice = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  
+  useEffect(() => {
+    setInputs((prev) => ({ ...prev, precototal: totalPrice.toFixed(2) }));
+  }, [totalPrice]);
+  const navigate = useNavigate();
+
+  const onChangeHandler = (e) => {
+    const { name, value } = e.target;
+    setInputs((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const Finalizarpedido = (e) => {
+    e.preventDefault();
+    console.log("aaaaaa");
+    axios
+      .post(
+        "http://localhost:5000/pedido/",
+        { ...inputs },
+        { withCredentials: true }
+      )
+      .then((res) => {
+
+        console.log(res);
+
+        if (!res.data.created) {
+
+          if (res.data.error_type === 0) {
+            
+            toast.error(res.data.error[0].msg, {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          } else if (res.data.error_type === 1) {
+
+            toast.error(res.data.message, {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          }
+        }
+
+        if (res.data.created) {
+
+          toast.success(res.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+
+        console.log(`Request error: ${err}`);
+      });
+
+      
+    // usando axios para conectar como o backend
+  };
+
+  
+
+
+
+
+
   return (
     <div className="w-full min-h-full flex justify-center" id="cart">
       <div className="w-[95%] mt-[90px] flex justify-between">
@@ -31,7 +140,7 @@ const Cart = () => {
                       ${item.price.toFixed(2)}
                     </td>
                     <td className="border border-slate-300 text-center">
-                      <img src={item.image} className="w-20 h-20" />
+                      <img src={item.image} className="w-20 h-20 object-contain mx-auto" />
                     </td>
                     <td className="border border-slate-300 text-center">
                       <button
@@ -71,6 +180,10 @@ const Cart = () => {
             )}
           </table>
         </div>
+        <form
+        className="bg-white p-4 shadow-md border rounded my-5 py-3"
+        onSubmit={Finalizarpedido}
+      >
         <div className="w-[25%] shadow py-3 px-2 flex justify-center">
           <div className="w-[95%]">
           <h3 className="text-3xl fond-bold text-gray-600 text-center my-4 w-full border border-b-slate-200">
@@ -80,6 +193,7 @@ const Cart = () => {
           <h4 className="text-bold text-bold border border-b-slate-200 border-l-0 border-t-0 border-r-0 py-2">
             Quantidade Total :{" "}
             {cart.reduce((sum, items) => (sum += items.quantity), 0)}
+            
           </h4>
 
           <h4 className="text-bold text-bold border border-b-slate-200 border-l-0 border-t-0 border-r-0 py-2">
@@ -90,6 +204,7 @@ const Cart = () => {
           <button className="bg-orange-400 rounded px-3 py-2 text-white w-full my-4">Finalizar Pedido</button>
           </div>
         </div>
+        </form>
       </div>
     </div>
   );

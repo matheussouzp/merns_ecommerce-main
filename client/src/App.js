@@ -20,6 +20,8 @@ import ProductDetails from "./pages/ProductDetails";
 import Registrar from "./pages/Registrar";
 import CadastrarProduto from "./pages/CadastrarProduto";
 import Login2 from "./pages/Login2";
+import Perfil from "./pages/Perfil";
+
 
 function App() {
   //console.log(Cookie.get("jwt_token"));
@@ -72,6 +74,7 @@ function App() {
         <Route path="registrar" element={<Registrar />} />
         <Route path="login2" element={<Login2 />} />
         <Route path="novoproduto" element={<CadastrarProduto />} />
+        <Route path="perfil" element={<Perfil />} />
 
       </Routes>
       <Footer />

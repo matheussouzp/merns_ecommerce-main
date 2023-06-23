@@ -10,13 +10,13 @@ import { GlobalContext } from "../GlobalContext/GlobalContext";
 
 
 
-const Registrar = () => {
+const Perfil = () => {
   const history = useNavigate();
 
   const { LoginStatus, IsLoggedIn, cart, AdminStatus } = useContext(GlobalContext);
 
 
-  if(LoginStatus){
+  if(!IsLoggedIn){
     history('/');
   }
   
@@ -46,8 +46,8 @@ const Registrar = () => {
     e.preventDefault();
     console.log(inputs);
     axios
-      .post(
-        "http://localhost:5000/cliente/",
+      .put(
+        "http://localhost:5000/cliente/${res.data.codigo}",
         { ...inputs },
         { withCredentials: true }
       )
@@ -107,7 +107,7 @@ const Registrar = () => {
         onSubmit={submitHandler}
       >
         <h2 className="text-center w-full p-3 text-gray-500 text-xl font-bold">
-          Registrar conta
+          Perfil
         </h2>
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="nome">
@@ -120,8 +120,7 @@ const Registrar = () => {
             name="nome"
             onChange={onChangeHandler}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-            required
-         />
+          />
         </div>
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="endereco">
@@ -134,8 +133,7 @@ const Registrar = () => {
             name="endereco"
             onChange={onChangeHandler}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-            required
-         />
+          />
         </div>
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="telefone">
@@ -161,8 +159,7 @@ const Registrar = () => {
             name="cpf"
             onChange={onChangeHandler}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-            required
-         />
+          />
         </div>
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="cartaoNome">
@@ -175,7 +172,6 @@ const Registrar = () => {
             name="cartaoNome"
             onChange={onChangeHandler}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-            required
           />
         </div>
         <div className="mb-2">
@@ -188,26 +184,21 @@ const Registrar = () => {
             id="cartaoNumero"
             name="cartaoNumero"
             onChange={onChangeHandler}
-            maxLength={20}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-            required
-         />
+          />
         </div>
         <div className="mb-2">
-        <label className="text-gray-500 mb-2 font-bold" htmlFor="cvc">
-  CVC
-</label>
-<input
-  type="number"
-  placeholder="CVC"
-  id="cvc"
-  name="cvc"
-  onChange={onChangeHandler}
-  maxLength={3}
-  className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-  required
-/>
-
+          <label className="text-gray-500 mb-2 font-bold" htmlFor="cvc">
+            CVC
+          </label>
+          <input
+            type="number"
+            placeholder="CVC"
+            id="cvc"
+            name="cvc"
+            onChange={onChangeHandler}
+            className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
+          />
         </div>
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="email">
@@ -220,8 +211,7 @@ const Registrar = () => {
             name="email"
             onChange={onChangeHandler}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-            required
-         />
+          />
         </div>
         <div className="mb-2">
           <label className="text-gray-500 mb-2 font-bold" htmlFor="senha">
@@ -234,7 +224,6 @@ const Registrar = () => {
             name="senha"
             onChange={onChangeHandler}
             className="w-full py-2 px-3 text-gray-500 shadow focus:outline-none focus:shadow-md border border-gray-500 rounded"
-            required
           />
         </div>
         <div className="mb-2">
@@ -251,8 +240,8 @@ const Registrar = () => {
           />
         </div>
         <div className="flex flex-col justify-between items-center my-3 mb-5">
-          <button className="text-white font-bold bg-blue-500 py-2 px-3 border rounder hover:bg-blue-700" > 
-            Registrar
+          <button className="text-white font-bold bg-blue-500 py-2 px-3 border rounder hover:bg-blue-700" onClick={onChangeHandler} > 
+            Atualizar
           </button>
           
           {/* <Link to="/login" className="text-blue-500"><p>Already have an account</p></Link> */}
@@ -263,4 +252,4 @@ const Registrar = () => {
   );
 };
 
-export default Registrar;
+export default Perfil;
