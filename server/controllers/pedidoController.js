@@ -14,14 +14,13 @@ class PedidoController {
         const cliente = await clienteModel.findOne({ codigo: pedido.cliente });
 
         pedido.cliente = cliente._id;
-        pedido.precototal=0;
 
         const novoPedido = await pedidoModel.create(pedido);
         res.status(201).json(novoPedido);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao criar o pedido' });
     }
-  }
+  } 
 
   async listarPedidos(req, res) {
     try {

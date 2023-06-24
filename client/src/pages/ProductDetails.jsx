@@ -61,7 +61,7 @@ const ProductDetails = () => {
           <div>
             <h2 className="hover:text-orange-400">{product.nome}</h2>
             <h3 className="my-2">R${product.preco}</h3>
-            <h3 className="hover:text-orange-400">NOTA: {product.medianota}</h3>
+            <h3 className="hover:text-orange-400">NOTA: {parseFloat(product.medianota).toFixed(2)}</h3>
             <p className="hover:text-orange-400">{product.descricao}</p>
           </div>
 

@@ -1,20 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
 import { GlobalContext } from "../GlobalContext/GlobalContext";
 import './cart_style.css';
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-
 const Cart = () => {
   const { cart, increaseQuantity, decreaseQuantity, removeItem } =
-    useContext(GlobalContext);
-    const history = useNavigate();
-
+  useContext(GlobalContext);
+  const history = useNavigate();
     
-    
-  console.log("aquiiii " +cart);
   const { LoginStatus, IsLoggedIn, AdminStatus } = useContext(GlobalContext);
 
   if(!LoginStatus){
@@ -44,15 +40,19 @@ const Cart = () => {
     });
   };
 
-  const Finalizarpedido = (e) => {
+  const Finalizarpedido = (e, totalPrice) => {
     e.preventDefault();
-    console.log("aaaaaa");
+    
+    console.log("total valor " + totalPrice);
+    setInputs((prev) => ({ ...prev, precototal: totalPrice.toFixed(2) }));
+    console.log(inputs.precototal);
+
     axios
-      .post(
-        "http://localhost:5000/pedido/",
-        { ...inputs },
-        { withCredentials: true }
-      )
+    .post(
+      "http://localhost:5000/pedido/",
+      { ...inputs, precototal: totalPrice.toFixed(2) },
+      { withCredentials: true }
+    )
       .then((res) => {
 
         console.log(res);
@@ -107,7 +107,6 @@ const Cart = () => {
       });
 
       
-    // usando axios para conectar como o backend
   };
 
   
@@ -180,10 +179,7 @@ const Cart = () => {
             )}
           </table>
         </div>
-        <form
-        className="bg-white p-4 shadow-md border rounded my-5 py-3"
-        onSubmit={Finalizarpedido}
-      >
+        
         <div className="w-[25%] shadow py-3 px-2 flex justify-center">
           <div className="w-[95%]">
           <h3 className="text-3xl fond-bold text-gray-600 text-center my-4 w-full border border-b-slate-200">
@@ -200,11 +196,17 @@ const Cart = () => {
             Preço Total:{" "}
             $ {cart.reduce((sum, items) => (sum += items.price * items.quantity), 0).toFixed(2)}
           </h4>
+          
+          <button
+          className="bg-orange-400 rounded px-3 py-2 text-white w-full my-4"
+          onClick={(e) => Finalizarpedido(e, totalPrice)}
+        >
+          Finalizar Pedido
+        </button>
 
-          <button className="bg-orange-400 rounded px-3 py-2 text-white w-full my-4">Finalizar Pedido</button>
           </div>
         </div>
-        </form>
+        
       </div>
     </div>
   );

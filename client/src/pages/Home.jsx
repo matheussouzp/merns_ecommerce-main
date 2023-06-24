@@ -94,6 +94,7 @@ const Home = () => {
                   <div className="mx-2">
                     <h2>{product.nome}</h2>
                     <h3>Por : R${product.preco}</h3>
+                    <h3 className="hover:text-orange-400">NOTA: {parseFloat(product.medianota).toFixed(2)}</h3>
 
 
 
