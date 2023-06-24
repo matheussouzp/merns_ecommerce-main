@@ -20,7 +20,7 @@ const Cart = () => {
   const [inputs, setInputs] = useState({
     precototal: "",
     produto: "",
-    cliente: "1",
+    cliente: "",
   });
 
   const totalPrice = cart.reduce(
@@ -48,13 +48,12 @@ const Cart = () => {
     console.log(inputs.precototal);
   
     axios
-      .get(`http://localhost:5000/cliente/email/${inputs.email}`)
+      .get(`http://localhost:5000/cliente/email/${email}`)
       .then((res) => {
-        // Verifique se o usuário foi encontrado
         if (res.data) {
           console.log("Usuário encontrado:", res.data);
-          
-          // Faça a requisição POST para enviar o pedido
+          setInputs((prev) => ({ ...prev, cliente: res.data.codigo }));
+
           axios
             .post(
               "http://localhost:5000/pedido/",

@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useReducer, useState } from "react";
 
 const initialState = {
   IsLoggedIn: false,
@@ -15,7 +15,7 @@ const Reducer = (state, action) => {
         ...state,
         codigo: action.payload,
       };
-    case "SET_EMAIL":
+      case "SET_EMAIL":
         return {
           ...state,
           email: action.payload,
@@ -82,6 +82,7 @@ export const GlobalContext = createContext(initialState);
 
 export const GlobalContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
+  const [email, setEmail] = useState("");
 
   const Codigo = (codigo) => {
     dispatch({
@@ -90,12 +91,8 @@ export const GlobalContextProvider = ({ children }) => {
     });
   };
   
-  const setEmail = (email) => {
-    dispatch({
-      type: "SET_EMAIL",
-      payload: email,
-    });
-  };
+  
+  
 
   const IsLoggedIn = (data) => {
     dispatch({
@@ -167,6 +164,7 @@ export const GlobalContextProvider = ({ children }) => {
         removeItem,
         clearCart,
         Codigo,
+        email,
         setEmail,
       }}
     >
