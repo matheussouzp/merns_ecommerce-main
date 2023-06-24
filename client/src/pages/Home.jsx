@@ -13,9 +13,7 @@ const Home = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const { email , codigo, cart, addToCart, updateCart } = useContext(GlobalContext);
-  console.log("GPT LINDO");
-  console.log(email);
-  console.log(codigo);
+  
 
   useEffect(() => {
     axios({

@@ -56,6 +56,12 @@ class ClienteController {
         res.status(200).json(resultado);
     }
 
+    async buscarPorEmail(req, res) {
+      const email = req.params.email;
+      const resultado = await clienteModel.findOne({ 'email': email });
+      res.status(200).json(resultado);
+    }
+
     async buscarPorId(req, res) {
         const codigo = req.params.codigo;
         const resultado = await clienteModel.findOne({ 'codigo': codigo });

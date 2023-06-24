@@ -52,6 +52,12 @@ class ProdutoController {
     res.status(200).json(resultado);
 }
 
+async buscarPorNome(req, res) {
+  const nome = req.params.nome;
+  const resultado = await produtoModel.findOne({ 'nome': nome });
+  res.status(200).json(resultado);
+}
+
   async buscarPorEmail(req, res) {
     const email = req.params.email;
     const resultado = await produtoModel.findOne({ 'email': email });

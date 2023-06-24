@@ -8,6 +8,8 @@ const { check } = require("express-validator/check");
 
 router.get('/', clienteController.listar);
 router.get('/:codigo', clienteController.buscarPorId);
+router.get('/email/:email', clienteController.buscarPorEmail);
+
 router.put('/:codigo', upload.single('imagem'), clienteController.atualizar);
 router.delete('/:codigo', clienteController.excluir);
 router.post('/', upload.single('imagem'),

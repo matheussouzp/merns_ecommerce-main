@@ -66,33 +66,48 @@ const Login = () => {
             });
           }
         }
-  if (res.data.created) {
-    toast.success(res.data.message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    console.log("testeeeeeeeeeee");
-    Codigo(res.data.codigo);
-    
-    console.log(codigo);
-    console.log(inputs);
-    navigate("/");
-  } 
+        if (res.data.created) {
+          toast.success(res.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+  
+          axios
+            .get(`http://localhost:5000/cliente/email/${inputs.email}`)
+            .then((response) => {
+              const usuario = response.data;
+              setEmail(usuario.email);
 
-// ...
-
+              console.log("usuario", usuario);
+  
+              // Faça o que for necessário com as informações do usuário
+            })
+            .catch((error) => {
+              console.log(`Erro ao buscar usuário: ${error}`);
+            });
+  
+          console.log("testeeeeeeeeeee");
+          Codigo(res.data.codigo);
+  
+          console.log(codigo);
+          console.log(inputs);
+          navigate("/");
+        }
+  
+        // ...
       })
       .catch((err) => {
         console.log(`Request error: ${err}`);
       });
     // usando axios para conectar como o backend
   };
+  
 
   return (
     <div className="w-full flex justify-center items-center" id="login_form">

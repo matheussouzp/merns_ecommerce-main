@@ -7,14 +7,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Cart = () => {
-  const { cart, increaseQuantity, decreaseQuantity, removeItem } =
-  useContext(GlobalContext);
+  const { cart, increaseQuantity, decreaseQuantity, removeItem, email } =
+    useContext(GlobalContext);
   const history = useNavigate();
-    
+  console.log("testee 3232"+email);
   const { LoginStatus, IsLoggedIn, AdminStatus } = useContext(GlobalContext);
 
-  if(!LoginStatus){
-    history('/');
+  if (!LoginStatus) {
+    history("/");
   }
 
   const [inputs, setInputs] = useState({
@@ -42,72 +42,81 @@ const Cart = () => {
 
   const Finalizarpedido = (e, totalPrice) => {
     e.preventDefault();
-    
+  
     console.log("total valor " + totalPrice);
     setInputs((prev) => ({ ...prev, precototal: totalPrice.toFixed(2) }));
     console.log(inputs.precototal);
-
+  
     axios
-    .post(
-      "http://localhost:5000/pedido/",
-      { ...inputs, precototal: totalPrice.toFixed(2) },
-      { withCredentials: true }
-    )
+      .get(`http://localhost:5000/cliente/email/${inputs.email}`)
       .then((res) => {
-
-        console.log(res);
-
-        if (!res.data.created) {
-
-          if (res.data.error_type === 0) {
-            
-            toast.error(res.data.error[0].msg, {
-              position: "bottom-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
+        // Verifique se o usuário foi encontrado
+        if (res.data) {
+          console.log("Usuário encontrado:", res.data);
+          
+          // Faça a requisição POST para enviar o pedido
+          axios
+            .post(
+              "http://localhost:5000/pedido/",
+              { ...inputs, precototal: totalPrice.toFixed(2) },
+              { withCredentials: true }
+            )
+            .then((res) => {
+              console.log(res);
+  
+              if (!res.data.created) {
+                if (res.data.error_type === 0) {
+                  toast.error(res.data.error[0].msg, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                } else if (res.data.error_type === 1) {
+                  toast.error(res.data.message, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                }
+              }
+  
+              if (res.data.created) {
+                toast.success(res.data.message, {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                });
+                navigate("/");
+              }
+            })
+            .catch((err) => {
+              console.log(`Request error: ${err}`);
             });
-          } else if (res.data.error_type === 1) {
-
-            toast.error(res.data.message, {
-              position: "bottom-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-          }
-        }
-
-        if (res.data.created) {
-
-          toast.success(res.data.message, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-          navigate("/");
+        } else {
+          console.log("Usuário não encontrado");
+          // Faça algo caso o usuário não seja encontrado, como exibir uma mensagem de erro ou redirecionar para uma página específica
         }
       })
       .catch((err) => {
-
         console.log(`Request error: ${err}`);
       });
-
-      
   };
+  
 
   
 
